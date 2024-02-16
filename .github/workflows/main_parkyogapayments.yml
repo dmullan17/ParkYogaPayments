@@ -54,4 +54,4 @@ jobs:
           app-name: 'ParkYogaPayments'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BF4EFE6D019C442491C41DD189AE3CDF }}
-          package: ${{env.DOTNET_ROOT}}/net-app
+          package: ${{env.DOTNET_ROOT}}/.net-app
