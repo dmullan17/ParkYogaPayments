@@ -7,12 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\cancel.html" />
-    <None Include="wwwroot\checkout.html" />
-    <None Include="wwwroot\style.css" />
-    <None Include="wwwroot\success.html" />
+    <Content Include="wwwroot\checkout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.9" />
     <PackageReference Include="Stripe.net" Version="42.*" />
