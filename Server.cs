@@ -70,7 +70,6 @@ namespace server.Controllers
         [HttpPost]
         public ActionResult Create()
         {
-            var domain = "http://localhost:4242";
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -84,7 +83,7 @@ namespace server.Controllers
                 },
                 Mode = "payment",
                 SuccessUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "success.html"),
-                CancelUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "cancel.html"),
+                CancelUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "checkout.html"),
             };
             var service = new SessionService();
             Session session = service.Create(options);
