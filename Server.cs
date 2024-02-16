@@ -5,6 +5,7 @@ using System.Net.Mail;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,6 +51,18 @@ namespace server.Controllers
         }
     }
 
+    [Route("ping")]
+    [ApiController]
+    public class PingController : Controller
+    {
+        [HttpGet]
+        public string Ping()
+        {
+            return "Pong";
+        }
+    }
+
+
     [Route("create-checkout-session")]
     [ApiController]
     public class CheckoutApiController : Controller
@@ -70,8 +83,8 @@ namespace server.Controllers
                   },
                 },
                 Mode = "payment",
-                SuccessUrl = domain + "/success.html",
-                CancelUrl = domain + "/checkout.html",
+                SuccessUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "success.html"),
+                CancelUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "cancel.html"),
             };
             var service = new SessionService();
             Session session = service.Create(options);
@@ -80,6 +93,17 @@ namespace server.Controllers
             return new StatusCodeResult(303);
         }
     }
+
+    public static class Helpers
+    {
+        public static string GetFullUrlToStaticFile(HttpRequest request, string relativeFilePath)
+        {
+            var baseUrl = $"{request.Scheme}://{request.Host}";
+            var fullUrl = $"{baseUrl}/{relativeFilePath.TrimStart('/')}";
+            return fullUrl;
+        }
+    }
+
 
     [ApiController]
     public class FeedbackController : Controller
