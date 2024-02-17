@@ -39,8 +39,6 @@ namespace server.Controllers
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var keyVaultSecretName = environment == "Development" ? "LocalApiKey" : "ProductionApiKey";
-
-            // Example: Retrieve a secret
             KeyVaultSecret secret = await client.GetSecretAsync(keyVaultSecretName);
             string secretValue = secret.Value;
 
@@ -89,16 +87,27 @@ namespace server.Controllers
     public class CheckoutApiController : Controller
     {
         [HttpPost]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var options = new SessionCreateOptions
+            var keyVaultUrl = new Uri("https://YWDKeyVault.vault.azure.net/");
+            var options = new DefaultAzureCredentialOptions
+            {
+                ExcludeInteractiveBrowserCredential = true
+            };
+            var client = new SecretClient(keyVaultUrl, new DefaultAzureCredential(options));
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var keyVaultSecretName = environment == "Development" ? "LocalPriceId" : "ProductionPriceId";
+            KeyVaultSecret secret = await client.GetSecretAsync(keyVaultSecretName);
+            string secretValue = secret.Value;
+
+            var sessionOptions = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
                 {
                   new SessionLineItemOptions
                   {
-                    // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    Price = "price_1OilRIJxMgmHNB6PhTITdz2P",
+                    Price = secretValue,
                     Quantity = 1,
                   },
                 },
@@ -107,7 +116,7 @@ namespace server.Controllers
                 CancelUrl = Helpers.GetFullUrlToStaticFile(HttpContext.Request, "checkout.html"),
             };
             var service = new SessionService();
-            Session session = service.Create(options);
+            Session session = service.Create(sessionOptions);
 
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
