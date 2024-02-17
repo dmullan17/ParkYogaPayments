@@ -6,7 +6,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:51259;http://localhost:51260"
+      "applicationUrl": "https://localhost:51259;http://localhost:51260",
+      "launchUrl": "checkout.html"
+
     }
   }
 }

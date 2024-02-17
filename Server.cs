@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore;
@@ -23,8 +24,30 @@ namespace server.Controllers
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            var host = WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .Build();
+
+            var keyVaultUrl = new Uri("https://YWDKeyVault.vault.azure.net/");
+            var options = new DefaultAzureCredentialOptions
+            {
+                ExcludeInteractiveBrowserCredential = true
+            };
+            var client = new SecretClient(keyVaultUrl, new DefaultAzureCredential(options));
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var keyVaultSecretName = environment == "Development" ? "LocalApiKey" : "ProductionApiKey";
+
+            // Example: Retrieve a secret
+            KeyVaultSecret secret = await client.GetSecretAsync(keyVaultSecretName);
+            string secretValue = secret.Value;
+
+            StripeConfiguration.ApiKey = secretValue;
+
+            await host.RunAsync();
+
             WebHost.CreateDefaultBuilder(args)
               //.UseUrls("http://0.0.0.0:4242")
               //.UseWebRoot("public")
@@ -40,26 +63,8 @@ namespace server.Controllers
         {
             services.AddMvc().AddNewtonsoftJson();
         }
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var keyVaultUrl = new Uri("https://YWDKeyVault.vault.azure.net/");
-            var options = new DefaultAzureCredentialOptions
-            {
-                ExcludeInteractiveBrowserCredential = true
-            };
-            var client = new SecretClient(keyVaultUrl, new DefaultAzureCredential(options));
-
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var keyVaultSecretName = environment == "Development" ? "LocalApiKey" : "ProductionApiKey";
-
-            // Example: Retrieve a secret
-            KeyVaultSecret secret = await client.GetSecretAsync(keyVaultSecretName);
-            string secretValue = secret.Value;
-
-            // This is a public sample test API key.
-            // Don’t submit any personally identifiable information in requests made with this key.
-            // Sign in to see your own test API key embedded in code samples.
-            StripeConfiguration.ApiKey = secretValue;
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseRouting();
             app.UseStaticFiles();
