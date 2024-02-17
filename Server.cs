@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,12 +40,26 @@ namespace server.Controllers
         {
             services.AddMvc().AddNewtonsoftJson();
         }
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var keyVaultUrl = new Uri("https://YWDKeyVault.vault.azure.net/");
+            var options = new DefaultAzureCredentialOptions
+            {
+                ExcludeInteractiveBrowserCredential = true
+            };
+            var client = new SecretClient(keyVaultUrl, new DefaultAzureCredential(options));
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var keyVaultSecretName = environment == "Development" ? "LocalApiKey" : "ProductionApiKey";
+
+            // Example: Retrieve a secret
+            KeyVaultSecret secret = await client.GetSecretAsync(keyVaultSecretName);
+            string secretValue = secret.Value;
+
             // This is a public sample test API key.
             // Don’t submit any personally identifiable information in requests made with this key.
             // Sign in to see your own test API key embedded in code samples.
-            StripeConfiguration.ApiKey = "sk_test_51OXX0bJxMgmHNB6PlG4tuXvol1XHaaKwROlAGHc7TtpVWvghYXvksYUpBoPApTuii9Ww9TnkzsuzJLoQ0lpXa12c00SE8jvgp7";
+            StripeConfiguration.ApiKey = secretValue;
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseRouting();
             app.UseStaticFiles();
