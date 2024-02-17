@@ -17,7 +17,7 @@
             align-items: center;
             margin-top: 20px;
         }
-
+/*
         .product {
             display: flex;
             flex-direction: column;
@@ -35,7 +35,7 @@
             text-align: center;
             padding: 0 20px;
         }
-
+*/
         #checkout-button {
             background-color: #f67329;
             color: white;
@@ -51,7 +51,7 @@
                 background-color: #e66219;
             }
 
-        @media (max-width: 600px) {
+        /*@media (max-width: 600px) {
             section {
                 padding: 10px;
             }
@@ -63,24 +63,35 @@
 
             #checkout-button {
                 width: 100%;
-                box-sizing: border-box; /* Ensures padding doesn't add to the width */
-            }
+                box-sizing: border-box;*/ /* Ensures padding doesn't add to the width */
+            /*}*/
         }
     </style>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
 </head>
   <body>
       <section>
-          <div class="product">
-              <img src="/img/silhouette-man-push-stone-peak.jpg" alt="The cover of Stubborn Attachments" />
-              <div class="description">
-                  <h3>Park Yoga With Danny</h3>
-                  <h5>Click checkout to securely process your payment</h5>
+          <div class="ui center aligned container">
+              <div class="ui segment">
+                  <img class="ui centered image" src="/img/silhouette-man-push-stone-peak.jpg">
+                  <h1 class="ui header">Park Yoga With Danny</h1>
+                  <h3 class="ui header">Click checkout to securely process your payment</h3>
+                  <form action="/create-checkout-session" method="POST">
+                      <button class="ui button" type="submit" id="checkout-button">Checkout</button>
+                  </form>
               </div>
+              <!--<div class="product">-->
+              <!--<img class="ui fluid image" src="/img/silhouette-man-push-stone-peak.jpg" alt="The cover of Stubborn Attachments" />
+              <div class="description">
+                  <h3 class="ui header">Park Yoga With Danny</h3>
+                  <h5 class="ui header">Click checkout to securely process your payment</h5>
+              </div>-->
+              <!--</div>-->
+
           </div>
-          <form action="/create-checkout-session" method="POST">
-              <button type="submit" id="checkout-button">Checkout</button>
-          </form>
+
       </section>
   </body>
 </html>
