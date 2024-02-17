@@ -14,7 +14,7 @@
 </body>
 </html>-->
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
     <title>Feedback</title>
@@ -28,5 +28,88 @@
         <br>
         <input type="submit" value="Send Feedback">
     </form>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Confirmation</title>
+    <!--<link rel="stylesheet" href="style.css">-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f7;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .product {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .product img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }
+
+        .description {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        #checkout-button {
+            background-color: #f67329;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            #checkout-button:hover {
+                background-color: #e66219;
+            }
+
+        @media (max-width: 600px) {
+            section {
+                padding: 10px;
+            }
+
+            .description h3,
+            .description h5 {
+                margin: 10px 0;
+            }
+
+            #checkout-button {
+                width: 100%;
+                box-sizing: border-box; /* Ensures padding doesn't add to the width */
+            }
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="product">
+            <img src="/img/silhouette-man-push-stone-peak.jpg" alt="The cover of Stubborn Attachments" />
+            <div class="description">
+                <h3>Park Yoga With Danny</h3>
+                <h5>Payment confirmed. Namaste</h5>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
